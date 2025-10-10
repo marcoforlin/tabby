@@ -31,7 +31,7 @@ impl BuildStructuredDoc for CommitDocument {
             commit::SHA: self.sha,
             commit::MESSAGE: self.message,
             commit::AUTHOR_EMAIL: self.author_email,
-            commit::AUTHOR_AT: self.author_at,
+            commit::AUTHOR_AT: self.author_at.to_rfc3339(),
         })
     }
 
