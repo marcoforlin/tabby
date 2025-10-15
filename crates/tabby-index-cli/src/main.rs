@@ -54,17 +54,14 @@ async fn main() -> anyhow::Result<()> {
     //
     println!("searching {} in {}", query, index_dir.display());
 
-
+    let repo = CodeRepository::new("https://github.com/TabbyML/tabby", &config_index_to_id(0));
     match cli.command {
         Commands::Search => {
-            let repo = CodeRepository::new("https://github.com/TabbyML/tabby", &config_index_to_id(0));
             let res = commands::run_query_cli(&query, &repo, &http_config).await.expect("TODO: panic message");
             println!("found: {}",res.as_str());
         }
         Commands::Index => {
-            let http_config = HttpModelConfigBuilder::default().build()?;
-
-            let repo = CodeRepository::new("https://github.com/TabbyML/tabby", &config_index_to_id(0));
+            // let http_config = HttpModelConfigBuilder::default().build()?;
             commands::run_index_cli(&repo, &http_config).await.expect("TODO: panic message");
         }
         Commands::Inspect => {

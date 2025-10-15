@@ -7,7 +7,7 @@ use tabby_common::api::code::{CodeSearch, CodeSearchError, CodeSearchParams,Code
 use crate::commands::code_search;
 use crate::commands::tantivy_provider;
 
-pub async fn run_query_cli(query: &String, repository: &CodeRepository, http_model_config: &HttpModelConfig) -> Result<String,()> {
+pub async fn run_query_cli(query: &String, repository: &CodeRepository, http_model_config: &HttpModelConfig) -> Result<String,String> {
     let emb: Arc<dyn Embedding> = create_embedding(&http_model_config.clone()).await;
     let index_reader_provider: Arc<tantivy_provider::IndexReaderProvider> = Arc::new(tantivy_provider::IndexReaderProvider::default());
 
@@ -48,15 +48,15 @@ pub async fn run_query_cli(query: &String, repository: &CodeRepository, http_mod
             }
             Err(CodeSearchError::TantivyError(err)) => {
                 // warn!("Failed to search: {}", err);
-                return Ok((err.to_string()));
+                return Err((err.to_string()));
             }
             Err(CodeSearchError::QueryParserError(err)) => {
                 // warn!("Failed to parse query: {}", err);
-                return Ok((err.to_string()));
+                return Err((err.to_string()));
             }
             Err(CodeSearchError::Other(err)) => {
                 // warn!("Failed to search: {}", err);
-                return Ok((err.to_string()));
+                return Err((err.to_string()));
             }
         }
     }

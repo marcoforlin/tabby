@@ -8,6 +8,7 @@ members = [
     "crates/tabby-inference",
     "crates/tabby-index",
     "crates/tabby-crawler",
+    "crates/tabby-mcp",
 
     "crates/aim-downloader",
     "crates/http-api-bindings",
@@ -20,7 +21,7 @@ members = [
     "ee/tabby-webserver",
     "ee/tabby-db",
     "ee/tabby-db-macros",
-    "ee/tabby-schema",
+    "ee/tabby-schema", "crates/tabby-mcp",
 ]
 
 [workspace.package]
