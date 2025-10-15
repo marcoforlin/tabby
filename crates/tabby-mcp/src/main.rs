@@ -7,7 +7,7 @@ use tracing_subscriber::{
 mod common;
 use common::counter::Counter;
 
-const BIND_ADDRESS: &str = "127.0.0.1:8080";
+const BIND_ADDRESS: &str = "0.0.0.0:8080";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
