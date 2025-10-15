@@ -7,7 +7,7 @@ use tracing_subscriber::{
 mod common;
 use common::counter::Counter;
 
-const BIND_ADDRESS: &str = "127.0.0.1:8000";
+const BIND_ADDRESS: &str = "127.0.0.1:8080";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -26,6 +26,8 @@ async fn main() -> anyhow::Result<()> {
         ct: tokio_util::sync::CancellationToken::new(),
         sse_keep_alive: None,
     };
+    println!("starting...");
+    tracing::trace!("starting the MCP server");
 
     let (sse_server, router) = SseServer::new(config);
 
@@ -45,7 +47,7 @@ async fn main() -> anyhow::Result<()> {
             tracing::error!(error = %e, "sse server shutdown with error");
         }
     });
-
+    println!("listening...");
     let ct = sse_server.with_service(common::codesearch_service::CodeSearchService::new);
 
     tokio::signal::ctrl_c().await?;
