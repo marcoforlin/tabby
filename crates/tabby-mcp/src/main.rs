@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use rmcp::transport::sse_server::{SseServer, SseServerConfig};
 use tracing_subscriber::{
     layer::SubscriberExt,
@@ -6,11 +7,34 @@ use tracing_subscriber::{
 };
 mod common;
 use common::counter::Counter;
-
+use tabby_index_cli::get_repos;
+// use tabby_db::DbConn;
+// use tabby_common::path::tabby_root;
 const BIND_ADDRESS: &str = "0.0.0.0:8080";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+
+
+    // let path = tabby_root().join("db.sqlite");
+    // let db = DbConn::new(path.as_path())
+    //     .await
+    //     .expect("Must be able to initialize db");
+    // db.finalize_stale_job_runs()
+    //     .await
+    //     .expect("Must be able to finalize stale job runs");
+    //
+    // // let logger2 = create_event_logger(db.clone());
+    // // Ensure query does not break on the join
+    // let repos = db.list_provided_repositories(vec![], Some("github".into()), None, None, None, false)
+    //     .await
+    //     .unwrap()
+    //     .iter()
+    //     .map(|repo| repo.name.to_string())
+    //     .collect::<Vec<_>>()
+    //     .join(", ");
+    // println!("repos: {repos:?}");
+
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -27,7 +51,9 @@ async fn main() -> anyhow::Result<()> {
         sse_keep_alive: None,
     };
     println!("starting...");
-    tracing::trace!("starting the MCP server");
+    tracing::info!("starting the MCP server");
+
+    tracing::info!("available repos:{0}",get_repos().await.unwrap());
 
     let (sse_server, router) = SseServer::new(config);
 

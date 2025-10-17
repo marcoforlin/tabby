@@ -65,9 +65,9 @@ impl CodeSearchService {
 
     #[tool(description = "get related code from service")]
     pub async fn get_code(&self,
-                          Parameters(SetCodeRequest { query, repository }): Parameters<SetCodeRequest>,) -> Result<CallToolResult, McpError> {
+                          Parameters(SetCodeRequest { query, repository }): Parameters<SetCodeRequest>, ) -> Result<CallToolResult, McpError> {
         tracing::debug!("log: {:?}", query);
-        let res = tabby_index_cli::code_search(query,repository).await;
+        let res = tabby_index_cli::code_search(query, repository).await;
         tracing::debug!("log: {:?}", res);
         if let Ok(r) = res {
             Ok(CallToolResult::success(vec![Content::text(
@@ -81,10 +81,11 @@ impl CodeSearchService {
 
     #[tool(description = "add code to the service")]
     pub async fn add_code(&self,
-                          Parameters(SetCodeRequest { query, repository }): Parameters<SetCodeRequest>,) -> Result<CallToolResult, McpError> {
-        // tracing::debug!("log: {:?}", query);
+                          Parameters(SetCodeRequest { query, repository }): Parameters<SetCodeRequest>, ) -> Result<CallToolResult, McpError> {
+        tracing::debug!("log: {:?}", query);
+        tracing::debug!("log: {:?}", repository);
         let res = tabby_index_cli::code_ingest(repository.clone()).await;
-        // tracing::debug!("log: {:?}", res);
+        tracing::debug!("log: {:?}", res);
         if let Ok(res) = res {
             Ok(CallToolResult::success(vec![Content::text(
                 res,
@@ -101,6 +102,20 @@ impl CodeSearchService {
         }
         // self.data_service.get_data()
     }
+
+
+    #[tool(description = "add code to the service")]
+    pub async fn get_available_repos(&self) -> Result<CallToolResult, McpError> {
+            let res = tabby_index_cli::get_repos().await;
+            if let Ok(res) = res {
+                Ok(CallToolResult::success(vec![Content::text(
+                    res,
+                )]))
+            } else {
+                Err(McpError::new(ErrorCode::INTERNAL_ERROR, res.unwrap_err(), None))
+            }
+        }
+}
     //
     // #[tool(description = "set index to service")]
     // pub async fn set_index(
@@ -110,7 +125,7 @@ impl CodeSearchService {
     //     let new_data = data.clone();
     //     format!("Current memory: {}", new_data)
     // }
-}
+
 
 #[tool_handler]
 impl ServerHandler for CodeSearchService {

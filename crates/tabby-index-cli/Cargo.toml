@@ -18,3 +18,4 @@ serde.workspace = true
 serde_json.workspace = true
 async-trait = "0.1.80"
 futures = "0.3.30"
+csv = "1.3.1"
